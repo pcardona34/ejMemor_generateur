@@ -5,7 +5,7 @@
 		"couleur": "blue-gray",
 		"contexte": {
     		"bouton": false,
-    		"titre": "Exécution",
+    		"titre": "Générateur",
     		"icone": "<i class='icon-retourner'></i>",
     		"action": "#!liste/exercices"
 		},
@@ -14,16 +14,10 @@
 		[
 			{
     			"bouton": false,
-    			"icone": "<i class='icon-info'></i>",
-    			"legende": "Mentions légales",
-    			"lien": "#!mentions/exercice"
-    			},
-			{
-    			"bouton": false,
     			"icone": "<i class='icon-consigne'></i>",
-    			"legende": "Consigne",
+    			"legende": "Information",
     			"lien": "#!consigne/exercice"
-    			}
+    		}
 		]
 	}
 }

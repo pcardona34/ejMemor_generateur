@@ -15,15 +15,9 @@
 				{
 				"bouton": false,
     				"icone": "<i class='icon-plume'></i>",
-    				"legende": "Effectuer cet exercice",
+    				"legende": "Créer ce type d'exercice",
     				"lien": "#!effectuer/exercice"
-    				},
-				{
-				"bouton": false,
-    				"icone": "<i class='icon-info'></i>",
-    				"legende": "Mentions légales",
-    				"lien": "#!mentions/exercice"
-    				}
+    			}
 			]
 		}
 }

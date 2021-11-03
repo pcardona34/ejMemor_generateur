@@ -1,0 +1,67 @@
+<!-- ==================================
+ *            Skelapp                   *
+ * ==================================== *
+ * (c)2021 - Patrick Cardona       *
+ * Licence GPL version 3 ou ultérieure  *
+ * VOIR la licence complète à la racine *
+ * ==================================== -->
+<!-- Template d'exécution effective de l'exercice 
+    exerciceTemplate.hbs
+ -->
+
+<div class="w3-container">
+
+  <div class="w3-card-4">
+    <div class="w3-container w3-padding analogue">
+      <h3>{{titre}} d'exercice pour {{app_name}}</h3>
+    </div>
+  </div>
+
+<div id='etape_Action_Nouveau'>
+
+<h2>Configuration</h2>
+  <form id='infos_editoriales_ejmemor'>
+  <fieldset><legend>Données éditoriales obligatoires&nbsp;</legend>
+  <table>
+    <tr>
+      <td><label for='edito_jmemor_0'>Thème:</label></td>
+      <td><input type='text' id='edito_jmemor_0' name='theme_jmemor' value='' placeholder='Thème de la série' /></td>
+    </tr>
+    <tr>
+      <td><label for='edito_jmemor_1'>Auteur:</label></td>
+      <td><input type='text' id='edito_jmemor_1' name='auteur' value='' placeholder="Auteur de la série" /></td>
+    </tr>
+    <tr>
+       <td><label for='edito_jmemor_2'>Consigne:</label></td>
+      <td><input type='text' id='edito_jmemor_2' name='consigne' value='' placeholder="Votre consigne..." /></td>
+  </tr>
+  </table>
+  </fieldset>
+  <button onclick="ojmemor.enregistrer_les_parametres(event);">Étape suivante</button>
+  </form>
+</div>
+
+<div id='etape_Action_Saisie_Serie' class="zone_masquee">
+    <h2>Saisie des cartes à mémoriser</h2> 
+  	<form><fieldset><legend>Nouvelle carte : </legend>
+  	<table><tr><td><label for='carte_1'>Recto :</label></td>
+  	<td><input type='text' name='recto' id='carte_1' value='' /></td></tr>
+  	<tr><td><label for='carte_2'>Verso :</label></td>
+  	<td><input type='text' name='verso' id='carte_2' value='' /></td></tr></table>
+  	<button onclick="ocarte.ajouter_carte();">Ajouter cette carte</button>
+  	</fieldset>
+  	<fieldset><legend>Cartes ajoutées à la série : </legend>
+  	<div id='cartes_saisies'>Aucune carte saisie.</div>
+  	<button onclick="ojmemor.enregistrer_cet_exercice();">Générer le code de cet exercice</button>
+    </fieldset></form>
+  </div>
+
+<div id='etape_Action_Code' class="zone_masquee">
+  <h2 id='titre10'><img src='./static/images/json.png' width='100px' align='left' alt='Données JSON' />Données de l'exercice</h2>
+  <div id='enregistrement'>
+	  <button onclick="ojmemor.selectionner_le_code();">Sélectionner le code</button><br />
+	  <textarea id='zonecode' cols='60' rows='10'></textarea>
+  </div>
+</div>
+
+</div>

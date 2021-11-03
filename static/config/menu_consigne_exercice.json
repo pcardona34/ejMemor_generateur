@@ -6,7 +6,7 @@
 		"contexte": 
 			{
 			"bouton": false,
-    			"titre": "Consigne",
+    			"titre": "Information",
     			"icone": "<i class='icon-retourner'></i>",
     			"action": "#!liste/exercices"
 			},
@@ -16,7 +16,7 @@
     				{
     				"bouton": false,
     				"icone": "<i class='icon-plume'></i>",
-    				"legende": "Reprendre l'exercice",
+    				"legende": "Créer ce type d'exercice",
     				"lien": "#!effectuer/exercice"
     				}
 			]

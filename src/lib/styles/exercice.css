@@ -1,3 +1,29 @@
 /* Feuille de style de l'exercice inclus dans l'application Skelapp */
 /* Copiez ci-dessous le style propre à la page d'exercice */
 
+/* Styles propres au générateur d'exercices pour ejMemor (type 01) */
+
+.zone_masquee {
+    display: none;
+}
+
+table.carte {
+    border: thin solid grey;
+    margin-bottom: 0.5rem;
+    border-collapse: collapse;
+}
+
+.carte td, th {
+    border: thin solid grey;
+    padding-left:0.3rem;
+    padding-right:0.3rem;
+}
+
+.carte thead {
+    background-color: #98caff;
+}
+
+.editer_carte, .supprimer_carte {
+    text-align: center;
+    padding-top: 0.3rem;
+}

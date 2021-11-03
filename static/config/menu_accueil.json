@@ -5,7 +5,7 @@
 		"contexte":
 		{
 			"bouton": true,
-			"titre": "_mon_application_",
+			"titre": "generateur_json",
 			"icone": "☰",
 			"action": "derouler_navigation()"
 		},
@@ -13,7 +13,7 @@
 		[
 			{
 			"icone": "<i class='icon-liste'></i>",
-			"legende": "Exercices",
+			"legende": "Types d'exercice",
 			"lien": "#!liste/exercices"
 			}
 		],
@@ -24,12 +24,6 @@
 			"icone": "<i class='icon-aide'></i>",
 			"legende": "Aide",
 			"lien": "#!aide"
-			},
-			{
-			"bouton": false,
-			"icone": "<i class='icon-profil'></i>",
-			"legende": "Profil",
-			"lien": "#!profil"
 			}
 		]
 	}

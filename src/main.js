@@ -34,8 +34,9 @@ const MSG = require('../static/config/messages.json').msg;
 
 /* Modules locaux */
 window.afficheRubrique = require('./lib/scripts/ongletModule.js').afficheRubrique;
-window.exercice = require('./lib/scripts/exerciceModule.js').exercice;
-window.profil = require('./lib/scripts/profilModule.js').profil;
+/* window.exercice = require('./lib/scripts/exerciceModule.js').exercice; */
+window.ojmemor = require('./lib/scripts/generateur_01.js').ojmemor;
+window.ocarte = require('./lib/scripts/generateur_01.js').ocarte;
 window.afficher_aide = require('./lib/scripts/aideModule.js').afficher_aide;
 window.masquer_aide = require('./lib/scripts/aideModule.js').masquer_aide;
 window.alterner_section_aide = require('./lib/scripts/aideModule.js').alterner_section_aide;
@@ -65,60 +66,19 @@ Handlebars.registerHelper("capitalisePremiereLettre", function (sChaine) {
     return null;
 });
 
-/* Interprète les niveaux d'enseignement : chiffre => nom */
-Handlebars.registerHelper("interpreteNiveau", function (sChiffre) {
-    let niveau = "";
-    let etalon = sChiffre;
-    switch(etalon) {
-  case "6":
-    niveau = "Sixième";
-    break;
-  case "5":
-    niveau = "Cinquième";
-    break;
-  case "4":
-    niveau = "Quatrième";
-    break;
-  case "3":
-    niveau = "Troisième";
-    break;
-  case "2":
-    niveau = "Seconde";
-    break;
-  case "1":
-    niveau = "Première";
-    break;
-  default:
-    return "Tous";
-  }
-  return niveau;
-});
-
-/* Helper : Filtre par niveau */
-Handlebars.registerHelper("estDuNiveauRequis", function (sNiveau) {
-  let niveauProfil = profil.retourne("appProfilNiveau", false);
-  if ( niveauProfil !== false ){
-	if( niveauProfil !== "*"){
-      		niveauProfil += "e";
-      		if ( sNiveau === niveauProfil ){
-        		return true;
-      		}else{
-        		return false;
-      }}
-  }
-  /* Aucun profil => aucun filtre */
-return true;
-});
-
-
 /* Helper : encode HTML (entitie, etc.) */
 Handlebars.registerHelper('encodeChaine',function(chaine){
     return new Handlebars.SafeString(chaine);
 });
 
-
-/* Niveaux d'enseignement */
-const niveaux = require ('../static/config/niveaux.json').niveaux;
+/* Helper : remplace un type par le champ de formulaire */
+Handlebars.registerHelper('typeFormulaireTexte',function(chaine){
+  if(chaine == "texte") {
+    return true;
+  }else{
+    return false;
+  }
+});
 
 
 /* ========================================
@@ -170,22 +130,16 @@ const listeTemplate = require("./pages/listeTemplate.hbs");
 const accueilExerciceTemplate = require("./pages/accueilExerciceTemplate.hbs");
 
 /* Page d'exécution d'un exercice */
-const exerciceTemplate = require("./pages/exerciceTemplate.hbs");
+/* const exerciceTemplate = require("./pages/exerciceTemplate.hbs"); */
 
-/* Page d'affichage de la consigne de l'exercice */
+/* Page d'exécution d'un générateur d'exercice de type 01 : ejMemor */
+const exerciceTemplate_01 = require("./pages/exerciceTemplate_01.hbs");
+
+/* Page d'affichage de l'information sur le génrateur de l'exercice */
 const consigneExerciceTemplate = require("./pages/consigneExerciceTemplate.hbs");
-
-/* Sous-Page : contexte exercice : mentions légales */
-const mentionsTemplate = require("./pages/mentionsTemplate.hbs");
 
 /* Sommaire aide contexte dictée */
 const aideTemplate = require("./pages/aideTemplate.hbs");
-
-/* Page de gestion du profil */
-const profilTemplate = require("./pages/profilTemplate.hbs");
-
-/* Formulaire de modification du profil */
-const formProfilTemplate = require("./pages/formProfilTemplate.hbs");
 
 /* Pied de page */
 const piedDePageTemplate = require("./composants/piedTemplate.hbs");
@@ -224,14 +178,6 @@ const dataMenuListe = require("../static/config/menu_liste.json").menu;
 const dataMenuAide = require("../static/config/menu_aide.json").menu;
 const menuAide = menuTemplate(dataMenuAide);
 
-/* On importe les données du menu Profil */
-const dataMenuProfil = require("../static/config/menu_profil.json").menu;
-const menuProfil = menuTemplate(dataMenuProfil);
-
-/* On importe les données du menu Modprefs (modification du profil) */
-const dataMenuModprefs = require("../static/config/menu_modprefs.json").menu;
-const menuModprefs = menuTemplate(dataMenuModprefs);
-
 /*  On importe et on conserve les items des menus 
  *  dans le contexte d'exécution des exercices. 
  *  IMPORTANT ! Du fait de l'appel avec le contexte 'did' 
@@ -240,7 +186,6 @@ const menuModprefs = menuTemplate(dataMenuModprefs);
  */
 const dataMenuAccueilExercice = require("../static/config/menu_accueil_exercice.json").menu;
 const dataMenuExercice = require("../static/config/menu_exercice.json").menu;
-const dataMenuMentionsExercice = require("../static/config/menu_mentions_exercice.json").menu;
 const dataMenuConsigneExercice = require("../static/config/menu_consigne_exercice.json").menu;
 
 
@@ -323,13 +268,11 @@ router.on({
 
  /* === Liste des exercices === */
  "liste/exercices": function () {
-    let niveau = profil.retourne("appProfilNiveau",0);
 	let JSONdata = require("../static/config/liste_exercices.json");
 	let contenu = {
 		"info": JSONdata,
 		"exercice": "exercice",
 		"cible": "exercice",
-		"niveau": niveau
 		};
 	let html = listeTemplate(contenu);
 	dataMenuListe.exercice = 'exercice';
@@ -375,9 +318,9 @@ router.on({
 	},
 
 /* =================================================
-	=== Page du contexte Exécution de l'Exercice 
+	=== Page du contexte Exécution du générateur de l'Exercice 
    =================================================*/
-    /* L'exercice choisi est exécuté => id -> did */
+    /* Le type d'exercice choisi est exécuté => id -> did */
  "effectuer/exercice/:id": function (params) {
     fetch("./static/data/exercice" + params.id + ".json")
         .then((response) => {
@@ -392,15 +335,26 @@ router.on({
 		     * du fichier exercice + id + .json :
 		     */
 			contenu.exercice = "exercice";
-			contenu.cible = "exercice";
+			contenu.app_name = data.app_name;
 			contenu.titre = data.titre;
-			contenu.series = data.series;
-		    /* On crée le contenu de la zone d'exécution */
-		    let html = exerciceTemplate(contenu);
-		    exercice.init(contenu.series); 
-	            exercice.commencer();
+			ojmemor.init();
+			ocarte.init();
+
+			/* On crée le contenu de la zone d'exécution 
+			et on charge le formulaire en fonction du type d'exercice */
+			let html;
+			switch (contenu.did) {
+				case "01":
+					/* Type : ejMemor */	
+					html = exerciceTemplate_01(contenu);
+					break;
+				default:
+					/*html = exerciceTemplate(contenu);*/
+					html = "<p>Erreur, contenu.did vaut : "+contenu.did+"</p>";
+			}		    
 		    /* On l'intègre dans le document */
 		    app.html(html);
+			notification.html(zone_notification);
 
 	/* On gère l'échec de la récupération des données. */
 	}).catch((err) => {
@@ -414,52 +368,8 @@ router.on({
 	menu.html(menuD);
 	},
 
- /* ---------------------------------------------
-  *  === Page des mentions de l'exercice courant ===
-  *  --------------------------------------------
-  */
- "mentions/exercice/:id": function (params) {
-  /* On récupère les données de l'exercice sélectionné
-   *  Au format JSon et on complète ce contenu pour 
-   *  Initialiser le template 'saisir_exercice...' et afficher son contenu... 
-   */
-    fetch("./static/data/exercice" + params.id + ".json")
-        .then((response) => {
-          return response.json();
-        })
-        .then((data) => {
-      /* On prépare le contenu du template 'mentions...' */
-      let contenu = {};
-		    /* id de l'exercice : passé en paramètre de l'URL */
-			contenu.did = params.id;
-		    /* Les données récupérées à partir 
-		     * du fichier dictee + id + .json :
-		     */
-			contenu.app_name = data.app_name;
-			contenu.titre = data.titre;
-			contenu.prof = data.prof;
-			contenu.exercice = "exercice";
-			contenu.cible = "exercice";
-		    /* On crée le contenu de la zone de mentions */
-		    let html = mentionsTemplate(contenu);
-		    /* On l'intègre dans le document */
-		    app.html(html);
-
-	/* On gère l'échec de la récupération des données. */
-	}).catch((err) => {
-		console.log("Erreur: "+ err);
-	});
-	/* On crée et on affiche le menu lié au contexte Exercice */
-	dataMenuMentionsExercice.did = params.id;
-	dataMenuMentionsExercice.exercice = "exercice";
-	dataMenuMentionsExercice.cible = "exercice";
-	dataMenuMentionsExercice.actionsMobile = [].slice.call(dataMenuMentionsExercice.actions).reverse();
-	let menuR = menuExerciceTemplate(dataMenuMentionsExercice);
-	menu.html(menuR);
-	},
-
 /* =================================================
-	=== Page de consigne de l'Exercice 
+	=== Page d'information sur le générateur de l'Exercice 
    =================================================*/
     /* L'exercice choisi => id -> did */
  "consigne/exercice/:id": function (params) {
@@ -495,33 +405,6 @@ router.on({
 	menu.html(menuD);
 	},
 
-
-  /* =========================================================
-   * === Page de gestion du profil / éventuellement modifié ===
-   * =========================================================
-   */
- "profil": function() {
-    let niveau = profil.retourne("appProfilNiveau","tous");
-    let contenu = {
-      "niveau": niveau
-    };
-    let html = profilTemplate(contenu);
-    app.html(html);
-    menu.html(menuProfil);
-    },
-
-  /* ===========================================
-   * === Formulaire : modification du profil ===
-   * ===========================================
-   */
-"modprefs": function() {
-    let contenu = {
-      "niveaux": niveaux
-    };
-    let html = formProfilTemplate(contenu);
-    app.html(html);
-    menu.html(menuModprefs);
-    },
 
   /* =========================
    * === home ===
