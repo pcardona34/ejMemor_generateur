@@ -18,4 +18,4 @@ Ce programme, lorsqu'il sera complet, permettra de créer des fichiers d'exercic
 
 Vous pouvez utiliser le générateur pour créer des fichiers d'exercice à partir de sa page de démonstration : voir la section précédente sur la compatibilité.
 
-[Démonstration]()https://pcardona34.github.io/generateur_json/)
+[Démonstration](https://pcardona34.github.io/generateur_json/)
